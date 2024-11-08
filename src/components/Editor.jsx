@@ -1,54 +1,27 @@
 import "./Editor.css"
 import EmotionItem from "./EmotionItem";
 import Button from "./Button";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-const emotionList = [
-    {
-        emotionId :1,
-        emotionName: "완전 좋음"
-    },
-    {
-        emotionId :2,
-        emotionName: "좋음"
-    },
-    {
-        emotionId :3,
-        emotionName: "보통"
-    },
-    {
-        emotionId :4,
-        emotionName: "나쁨"
-    },
-    {
-        emotionId :5,
-        emotionName: "매우 나쁨"
-    },
-]
-const getStringedDate = (targetDate)=>{
-    // 날짜 : YYYY-MM-DD
-    let year = targetDate.getFullYear();
-    let month = targetDate.getMonth() + 1;
-    let date = targetDate.getDate();
-
-    if(month<10){
-        month = `0${month}`;
-    }
-    if(date< 10){
-        date = `0${date}`;
-    }
-    return `${year}-${month}-${date}`;
-}
+import { emotionList } from "../util/constants";
+import { getStringedDate } from "../util/get-stringed-date";
 
 
-const Editor = ({onSubmit}) =>{
+const Editor = ({initData,onSubmit}) =>{
     const [input,setInput] = useState({
-        createDate : new Date(),
+        createdDate : new Date(),
         emotionId : 3,
         content: "",
     });
     const nav = useNavigate();
-
+    useEffect(()=>{
+        if(initData){
+            setInput({
+                ...initData,
+                createdDate: new Date(Number(initData.createdDate)),
+            })
+        };
+    },[initData])
     const onChangeInput = (e) =>{
         //문자열로 저장되서 이거 방지하기 위한 저장
     let name  =e.target.name;
